@@ -22,7 +22,8 @@ fn split_input_into_2_sorted_lists(input: Vec<String>) -> (Vec<i32>, Vec<i32>) {
     let mut list2: Vec<i32> = Vec::new();
 
     for line in input {
-        let pair = line.split("   ").collect::<Vec<_>>();
+        let pair = line.split_whitespace().collect::<Vec<_>>();
+        let pair = line.split_whitespace().collect::<Vec<_>>();
         list1.push(pair[0].parse::<i32>().unwrap());
         list2.push(pair[1].parse::<i32>().unwrap());
     }
