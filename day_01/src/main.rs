@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -8,7 +10,7 @@ fn main() {
     let input = read_input();
     let (list1, list2) = split_input_into_2_sorted_lists(input);
 
-    let part_1_answer = part_1(&list1, &list2);
+    let part_1_answer = part_1_zip(&list1, &list2);
     println!("Part 1 answer - {}", part_1_answer);
 
     let part_2_answer = part_2(&list1, &list2);
@@ -31,28 +33,28 @@ fn split_input_into_2_sorted_lists(input: Vec<String>) -> (Vec<i32>, Vec<i32>) {
 }
 
 fn part_1(list1: &Vec<i32>, list2: &Vec<i32>) -> i32 {
-    let mut sum: i32 = 0;
-    for i in 0..list1.len() {
-        sum += (list1[i] - list2[i]).abs();
-    }
-    sum
+    list1
+        .iter()
+        .enumerate()
+        .fold(0, |acc, (index, value)| acc + (value - list2[index]).abs())
+}
+
+fn part_1_zip(list1: &Vec<i32>, list2: &Vec<i32>) -> i32 {
+    list1.iter().zip(list2).map(|(x, y)| (x - y).abs()).sum()
 }
 
 fn part_2(list1: &Vec<i32>, list2: &Vec<i32>) -> i32 {
     let list2_grouped = group_by(&list2);
-    let mut sum = 0;
-    for value in list1 {
-        sum += value * list2_grouped.get(&value).unwrap_or(&0);
-    }
-    sum
+    list1.iter().fold(0, |acc, value| {
+        acc + value * list2_grouped.get(&value).unwrap_or(&0)
+    })
 }
 
 fn group_by(list: &Vec<i32>) -> HashMap<i32, i32> {
-    let hashmap = list.iter().fold(HashMap::new(), |mut acc, value| {
+    list.iter().fold(HashMap::new(), |mut acc, value| {
         *acc.entry(*value).or_insert(0) += 1;
         acc
-    });
-    hashmap
+    })
 }
 
 fn read_input() -> Vec<String> {
