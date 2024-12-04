@@ -33,25 +33,25 @@ fn split_input_into_2_sorted_lists(input: Vec<String>) -> (Vec<i32>, Vec<i32>) {
     (list1, list2)
 }
 
-fn part_1(list1: &Vec<i32>, list2: &Vec<i32>) -> i32 {
+fn part_1(list1: &[i32], list2: &[i32]) -> i32 {
     list1
         .iter()
         .enumerate()
         .fold(0, |acc, (index, value)| acc + (value - list2[index]).abs())
 }
 
-fn part_1_zip(list1: &Vec<i32>, list2: &Vec<i32>) -> i32 {
+fn part_1_zip(list1: &[i32], list2: &Vec<i32>) -> i32 {
     list1.iter().zip(list2).map(|(x, y)| (x - y).abs()).sum()
 }
 
-fn part_2(list1: &Vec<i32>, list2: &Vec<i32>) -> i32 {
-    let list2_grouped = group_by(&list2);
+fn part_2(list1: &[i32], list2: &[i32]) -> i32 {
+    let list2_grouped = group_by(list2);
     list1.iter().fold(0, |acc, value| {
-        acc + value * list2_grouped.get(&value).unwrap_or(&0)
+        acc + value * list2_grouped.get(value).unwrap_or(&0)
     })
 }
 
-fn group_by(list: &Vec<i32>) -> HashMap<i32, i32> {
+fn group_by(list: &[i32]) -> HashMap<i32, i32> {
     list.iter().fold(HashMap::new(), |mut acc, value| {
         *acc.entry(*value).or_insert(0) += 1;
         acc
